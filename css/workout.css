@@ -1,0 +1,15 @@
+
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+/* Wrapper element that I will bind the WorkoutHelper
+ * react component to.
+ */
+workout {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 1em;
+  background-color: #eef;
+}
