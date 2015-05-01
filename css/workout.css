@@ -13,3 +13,10 @@ workout {
   padding: 1em;
   background-color: #eef;
 }
+
+/* Set with className attribute on WorkoutHelper component (workout-helper.js)
+ */
+.workout h1 {
+  color: #226;
+  font-size: 1.1em;
+}
