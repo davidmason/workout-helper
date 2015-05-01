@@ -20,3 +20,19 @@ workout {
   color: #226;
   font-size: 1.1em;
 }
+
+.workout ul {
+  list-style-type: none;
+}
+
+.workout li {
+  padding: 1em;
+  border: 1px solid #dde;
+  margin-bottom: -1px;
+  color: #717183;
+  font-weight: 600;
+}
+
+.workout li:hover {
+  background-color: #dedeff;
+}

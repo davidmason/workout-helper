@@ -46,17 +46,29 @@
 
     <script type="text/jsx">
       React.render(
-        <WorkoutHelper name="Easy Mode" />,
+        <WorkoutHelper name="Easy Mode">
+          <Interval exercise="Walk on the spot" />
+          <Interval exercise="Clap your hands" />
+        </WorkoutHelper>,
         document.getElementById('easy-mode')
       );
 
       React.render(
-        <WorkoutHelper name="Warm Up" />,
+        <WorkoutHelper name="Warm Up">
+          <Interval exercise="Jog on the spot" />
+          <Interval exercise="Fast punches" />
+          <Interval exercise="Star jumps" />
+        </WorkoutHelper>,
         document.getElementById('warm-up')
       );
 
       React.render(
-        <WorkoutHelper name="Extreme" />,
+        <WorkoutHelper name="Extreme">
+          <Interval exercise="High knees" />
+          <Interval exercise="Burpees" />
+          <Interval exercise="Mountain climbers" />
+          <Interval exercise="Lunges" />
+        </WorkoutHelper>,
         document.getElementById('extreme')
       );
     </script>
