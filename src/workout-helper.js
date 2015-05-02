@@ -50,12 +50,14 @@ var Interval = React.createClass({
  */
 var WorkoutHelper = React.createClass({
   getInitialState: function () {
-    return { intervals: this.props.intervals.slice() };
+    var intervals = this.props.intervals.map(function (interval, index) {
+      return _.assign({}, interval, { key: index });
+    });
+    return { intervals: intervals };
   },
   render: function () {
 
     var intervals = this.state.intervals.map(function (interval) {
-      // TODO each interval should have a unique key
       return (
         <Interval {...interval}></Interval>
       );
