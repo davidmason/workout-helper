@@ -42,6 +42,72 @@ var Interval = React.createClass({
 });
 
 /**
+ * An inline form to add a new interval.
+ *
+ * handleAdd: (function(string, number)) callback to add an interval with
+ *                                       a given name and number of seconds
+ */
+var IntervalForm = React.createClass({
+  getInitialState: function () {
+    return {
+      collapsed: true,
+      error: null
+    };
+  },
+  expand: function (event) {
+    this.setState({ collapsed: false });
+  },
+  handleSubmit: function (event) {
+    event.preventDefault();
+    var name = React.findDOMNode(this.refs.name).value.trim();
+    var error = null;
+    if (name.length <= 0) {
+        error = "The exercise has to have a name.";
+    }
+    var rawTime = React.findDOMNode(this.refs.time).value.trim();
+    time = parseInt(rawTime);
+
+    if (Number.isNaN(time)) {
+        error = "Time must be a number of seconds.";
+    }
+    if (time <= 0) {
+        error = "You have to do the exercise for at least 1 second.";
+    }
+
+    this.setState({ error: error });
+    if (error) return;
+
+    this.props.handleAdd(name, time);
+    this.collapse();
+  },
+  collapse: function () {
+    this.setState({ collapsed: true, error: null });
+    React.findDOMNode(this.refs.name).value = '';
+    React.findDOMNode(this.refs.time).value = '';
+  },
+  render: function () {
+    if (this.state.collapsed) {
+      return (
+        <div key="addbutton" className="new-interval">
+          <button className="full-width" onClick={this.expand}>+</button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="new-interval">
+          <button key="cancelbutton" onClick={this.collapse}>-</button>
+          <input type="text" ref="name" placeholder="Exercise name"></input>
+          <i className="fa fa-clock-o"></i>
+          <input type="text" ref="time" placeholder="Seconds to exercise"></input>
+          <button onClick={this.handleSubmit}>Add</button>
+          {this.state.error}
+        </div>
+      );
+    }
+  }
+});
+
+/**
  * Widget to design and run an interval training workout.
  *
  * name: (string) optional name for the workout
@@ -53,7 +119,22 @@ var WorkoutHelper = React.createClass({
     var intervals = this.props.intervals.map(function (interval, index) {
       return _.assign({}, interval, { key: index });
     });
-    return { intervals: intervals };
+    return {
+      intervals: intervals,
+      nextKey: intervals.length
+    };
+  },
+  addInterval: function (name, time) {
+    var intervals = _.clone(this.state.intervals);
+    intervals.push({
+      key: this.state.nextKey,
+      exercise: name,
+      time: time
+    });
+    this.setState({
+      intervals: intervals,
+      nextKey: this.state.nextKey + 1
+    });
   },
   render: function () {
 
@@ -68,6 +149,7 @@ var WorkoutHelper = React.createClass({
       <ul>
         {intervals}
       </ul>
+      <IntervalForm handleAdd={this.addInterval}></IntervalForm>
     </div>;
   }
 });

@@ -3,6 +3,10 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
+button {
+
+}
+
 /* Wrapper element that I will bind the WorkoutHelper
  * react component to.
  */
@@ -23,9 +27,11 @@ workout {
 
 .workout ul {
   list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
-.workout li {
+.workout li, .new-interval input[type=text] {
   padding: 1em;
   border: 1px solid #dde;
   margin-bottom: -1px;
@@ -33,8 +39,44 @@ workout {
   font-weight: 600;
 }
 
+.new-interval input[type=text] {
+  background-color: #f6f6fd;
+}
+
 .workout li:hover {
   background-color: #dedeff;
+}
+
+.new-interval {
+  width: 100%;
+}
+
+button.full-width {
+  width: 100%;
+}
+
+.new-interval button {
+  position: relative;
+  vertical-align: top;
+  padding: 1em;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background-color: #eef;
+  border: 1px solid #dde;
+
+  color: #717183;
+  font-weight: 600;
+
+  cursor: pointer;
+  -webkit-box-shadow: inset 0 -1px #dde;
+  box-shadow: inset 0 -1px #dde;
+}
+
+.new-interval button:active {
+  top: 1px;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 .clock {
