@@ -36,3 +36,9 @@ workout {
 .workout li:hover {
   background-color: #dedeff;
 }
+
+.clock {
+  display: inline-block;
+  font-weight: 400;
+  margin-left: 0.5em;
+}

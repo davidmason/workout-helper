@@ -16,6 +16,10 @@
     <script src="https://fb.me/JSXTransformer-0.13.2.js"></script>
 
     <script type="text/jsx" src="src/workout-helper.js"></script>
+
+    <!-- This is for icons. See http://fortawesome.github.io/Font-Awesome/ -->
+    <link rel="stylesheet"
+      href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   </head>
   <body>
 
@@ -47,27 +51,27 @@
     <script type="text/jsx">
       React.render(
         <WorkoutHelper name="Easy Mode">
-          <Interval exercise="Walk on the spot" />
-          <Interval exercise="Clap your hands" />
+          <Interval exercise="Walk on the spot" time="20" />
+          <Interval exercise="Clap your hands" time="10" />
         </WorkoutHelper>,
         document.getElementById('easy-mode')
       );
 
       React.render(
         <WorkoutHelper name="Warm Up">
-          <Interval exercise="Jog on the spot" />
-          <Interval exercise="Fast punches" />
-          <Interval exercise="Star jumps" />
+          <Interval exercise="Jog on the spot" time="20" />
+          <Interval exercise="Fast punches" time="10" />
+          <Interval exercise="Star jumps" time="15" />
         </WorkoutHelper>,
         document.getElementById('warm-up')
       );
 
       React.render(
         <WorkoutHelper name="Extreme">
-          <Interval exercise="High knees" />
-          <Interval exercise="Burpees" />
-          <Interval exercise="Mountain climbers" />
-          <Interval exercise="Lunges" />
+          <Interval exercise="High knees" time="90" />
+          <Interval exercise="Burpees" time="30" />
+          <Interval exercise="Mountain climbers" time="45" />
+          <Interval exercise="Lunges" time="25" />
         </WorkoutHelper>,
         document.getElementById('extreme')
       );
