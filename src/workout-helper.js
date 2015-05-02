@@ -44,14 +44,27 @@ var Interval = React.createClass({
 /**
  * Widget to design and run an interval training workout.
  *
- * name: optional name for the workout
+ * name: (string) optional name for the workout
+ * intervals: (array of { exercise, time }) list of exercises, each with
+ *                                          name and how long to perform it.
  */
 var WorkoutHelper = React.createClass({
+  getInitialState: function () {
+    return { intervals: this.props.intervals.slice() };
+  },
   render: function () {
+
+    var intervals = this.state.intervals.map(function (interval) {
+      // TODO each interval should have a unique key
+      return (
+        <Interval {...interval}></Interval>
+      );
+    });
+
     return <div className="workout">
       <h1>Workout: {this.props.name}</h1>
       <ul>
-        {this.props.children}
+        {intervals}
       </ul>
     </div>;
   }

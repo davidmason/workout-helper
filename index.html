@@ -49,30 +49,33 @@
     </workout>
 
     <script type="text/jsx">
+      var easyModeIntervals = [
+        { exercise: "Walk on the spot", time: 20 },
+        { exercise: "Clap your hands", time: 10 }
+      ];
       React.render(
-        <WorkoutHelper name="Easy Mode">
-          <Interval exercise="Walk on the spot" time="20" />
-          <Interval exercise="Clap your hands" time="10" />
-        </WorkoutHelper>,
+        <WorkoutHelper name="Easy Mode" intervals={easyModeIntervals}></WorkoutHelper>,
         document.getElementById('easy-mode')
       );
 
+      var warmUpIntervals = [
+        { exercise: "Jog on the spot", time: 20 },
+        { exercise: "Fast punches", time: 10 },
+        { exercise: "Star jumps", time: 15 }
+      ];
       React.render(
-        <WorkoutHelper name="Warm Up">
-          <Interval exercise="Jog on the spot" time="20" />
-          <Interval exercise="Fast punches" time="10" />
-          <Interval exercise="Star jumps" time="15" />
-        </WorkoutHelper>,
+        <WorkoutHelper name="Warm Up" intervals={warmUpIntervals}></WorkoutHelper>,
         document.getElementById('warm-up')
       );
 
+      var extremeIntervals = [
+        { exercise: "High knees", time: 90 },
+        { exercise: "Burpees", time: 30 },
+        { exercise: "Mountain climbers", time: 45 },
+        { exercise: "Lunges", time: 25 }
+      ];
       React.render(
-        <WorkoutHelper name="Extreme">
-          <Interval exercise="High knees" time="90" />
-          <Interval exercise="Burpees" time="30" />
-          <Interval exercise="Mountain climbers" time="45" />
-          <Interval exercise="Lunges" time="25" />
-        </WorkoutHelper>,
+        <WorkoutHelper name="Extreme" intervals={extremeIntervals}></WorkoutHelper>,
         document.getElementById('extreme')
       );
     </script>
