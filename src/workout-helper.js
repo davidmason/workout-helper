@@ -35,8 +35,25 @@ var Clock = React.createClass({
  */
 var Interval = React.createClass({
   render: function () {
-    return <li className="interval">
-      {this.props.exercise} <Clock seconds={this.props.time} />
+    var time = this.props.time;
+    var className = "interval";
+
+    if (this.props.stage == 'prepare') {
+      className += ' prepare';
+      time = this.props.countdown;
+    }
+
+    if (this.props.stage == 'active') {
+      className += ' active';
+      time = this.props.countdown;
+    }
+
+    if (this.props.stage == 'finished') {
+      className += ' finished';
+    }
+
+    return <li className={className}>
+      {this.props.exercise} <Clock seconds={time} />
     </li>;
   }
 });
@@ -108,6 +125,22 @@ var IntervalForm = React.createClass({
 });
 
 /**
+ * Simple go button that will transition to a pause button.
+ *
+ * handleGo: (function) callback to trigger when user indicates to start
+ */
+var GoButton = React.createClass({
+  render: function () {
+    return (
+      <button className="go-button" onClick={this.props.handleGo}>
+        <i className="fa fa-child"></i> Go! <i className="fa fa-play-circle"></i>
+      </button>
+    );
+  }
+});
+
+
+/**
  * Widget to design and run an interval training workout.
  *
  * name: (string) optional name for the workout
@@ -117,11 +150,15 @@ var IntervalForm = React.createClass({
 var WorkoutHelper = React.createClass({
   getInitialState: function () {
     var intervals = this.props.intervals.map(function (interval, index) {
-      return _.assign({}, interval, { key: index });
+      return _.assign({}, interval, { key: index, stage: 'dormant' });
     });
     return {
       intervals: intervals,
-      nextKey: intervals.length
+      nextKey: intervals.length,
+      // Properties for when the workout is running.
+      running: false,
+      paused: false,
+      currentInterval: 0
     };
   },
   addInterval: function (name, time) {
@@ -129,11 +166,120 @@ var WorkoutHelper = React.createClass({
     intervals.push({
       key: this.state.nextKey,
       exercise: name,
-      time: time
+      time: time,
+      stage: 'dormant'
     });
     this.setState({
       intervals: intervals,
       nextKey: this.state.nextKey + 1
+    });
+  },
+  startWorkout: function () {
+    if (this.state.intervals.length === 0) {
+      // TODO show error in the UI
+      console.error('Tried to start a workout with no intervals');
+      return;
+    }
+
+    var started = this.state.running;
+    var paused = started && this.state.paused;
+    var alreadyRunning = started && !paused;
+
+    if (alreadyRunning) {
+      return;
+    }
+
+    if (!started) {
+      // Make sure all intervals are dormant
+      var intervals = this.state.intervals.map(function (interval) {
+        return _.assign({}, interval, { stage: 'dormant' });
+      });
+
+      // Get first interval ready
+      var interval = intervals[0];
+
+      // Start from the first interval
+      this.setState({
+        currentInterval: 0,
+        intervals: intervals
+      });
+    }
+
+    // TODO check if it is ok to setState twice like this.
+
+    // Start or resume ticking
+    this.setState({
+      running: true,
+      paused: false
+    });
+
+    // Make sure old interval is definitely stopped before overwriting
+    // the handle.
+    clearInterval(this.tickHandle);
+    this.tickHandle = setInterval(this.tick, 1000);
+
+    // TODO clock with total time display (set in initial state and
+    //                                     addInterval)
+    console.log(this.state.intervals.length);
+  },
+  tick: function () {
+    var currentIndex = this.state.currentInterval;
+
+    if (currentIndex >= this.state.intervals.length) {
+      // No exercises left, all done.
+      this.setState({
+        currentInterval: 0,
+        running: false,
+        paused: false
+      });
+      clearInterval(this.tickHandle);
+      this.tickHandle = null;
+      return;
+    }
+
+
+    var intervals = _.clone(this.state.intervals);
+    var current = _.clone(intervals[currentIndex]);
+
+    // Replace old interval with clone that will be updated
+    intervals[currentIndex] = current;
+
+    console.log("current interval: %i", currentIndex);
+    console.log("current stage: %s", current.stage);
+    console.log("countdown: %i", current.countdown);
+
+    switch (current.stage) {
+      case 'dormant':
+        current.stage = 'prepare';
+        current.countdown = 5;
+        break;
+      case 'prepare':
+        current.countdown--;
+        if (current.countdown <= 0) {
+          // finished prep, activate
+          current.stage = 'active';
+          current.countdown = current.time;
+        }
+        break;
+      case 'active':
+        current.countdown--;
+        if (current.countdown <= 0) {
+          current.stage = 'finished';
+          this.setState({
+            currentInterval: currentIndex + 1
+          });
+        }
+        break;
+      case 'finished':
+        console.error('Trying to continue with an exercies that is finished.');
+        return;
+      default:
+        console.error('Unrecognized stage for interval: ' + current.stage);
+        return;
+    }
+
+    this.setState({
+      intervals: intervals
     });
   },
   render: function () {
@@ -146,6 +292,7 @@ var WorkoutHelper = React.createClass({
 
     return <div className="workout">
       <h1>Workout: {this.props.name}</h1>
+      <GoButton handleGo={this.startWorkout} />
       <ul>
         {intervals}
       </ul>

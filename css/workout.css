@@ -3,10 +3,6 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
-button {
-
-}
-
 /* Wrapper element that I will bind the WorkoutHelper
  * react component to.
  */
@@ -21,8 +17,10 @@ workout {
 /* Set with className attribute on WorkoutHelper component (workout-helper.js)
  */
 .workout h1 {
+  display: inline-block;
   color: #226;
-  font-size: 1.1em;
+  font-size: 1.2em;
+  padding-right: 1.5em;
 }
 
 .workout ul {
@@ -51,11 +49,8 @@ workout {
   width: 100%;
 }
 
-button.full-width {
-  width: 100%;
-}
 
-.new-interval button {
+.workout button {
   position: relative;
   vertical-align: top;
   padding: 1em;
@@ -72,15 +67,41 @@ button.full-width {
   box-shadow: inset 0 -1px #dde;
 }
 
-.new-interval button:active {
+.workout button:active {
   top: 1px;
   outline: none;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
 
+button.full-width {
+  width: 100%;
+}
+
+.go-button {
+  font-size: 1.2em;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .clock {
   display: inline-block;
   font-weight: 400;
   margin-left: 0.5em;
+}
+
+.interval.prepare, .interval.active {
+  font-size: 1.5em;
+}
+
+.interval.prepare {
+  background-color: #daefff;
+}
+
+.interval.finished {
+  background-color: #d7d7ef;
+}
+
+.interval.active {
+  background-color: #AFE3FF;
 }
