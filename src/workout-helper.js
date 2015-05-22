@@ -190,10 +190,7 @@ var WorkoutHelper = React.createClass({
     }
 
     if (!started) {
-      // Make sure all intervals are dormant
-      var intervals = this.state.intervals.map(function (interval) {
-        return _.assign({}, interval, { stage: 'dormant' });
-      });
+      var intervals = resetAllIntervals(this.state.intervals);
 
       // Get first interval ready
       var interval = intervals[0];
@@ -204,8 +201,6 @@ var WorkoutHelper = React.createClass({
         intervals: intervals
       });
     }
-
-    // TODO check if it is ok to setState twice like this.
 
     // Start or resume ticking
     this.setState({
@@ -221,6 +216,16 @@ var WorkoutHelper = React.createClass({
     // TODO clock with total time display (set in initial state and
     //                                     addInterval)
     console.log(this.state.intervals.length);
+
+    /**
+     * Return intervals with all dormant.
+     */
+    function resetAllIntervals(intervals) {
+      // Make sure all intervals are dormant
+      return intervals.map(function (interval) {
+        return _.assign({}, interval, { stage: 'dormant' });
+      });
+    }
   },
   tick: function () {
     var currentIndex = this.state.currentInterval;
@@ -237,7 +242,6 @@ var WorkoutHelper = React.createClass({
       return;
     }
 
-
     var intervals = _.clone(this.state.intervals);
     var current = _.clone(intervals[currentIndex]);
 
@@ -250,8 +254,7 @@ var WorkoutHelper = React.createClass({
 
     switch (current.stage) {
       case 'dormant':
-        current.stage = 'prepare';
-        current.countdown = 5;
+        prepare(current);
         break;
       case 'prepare':
         current.countdown--;
@@ -265,9 +268,18 @@ var WorkoutHelper = React.createClass({
         current.countdown--;
         if (current.countdown <= 0) {
           current.stage = 'finished';
+
+          var nextIndex = currentIndex + 1;
           this.setState({
-            currentInterval: currentIndex + 1
+            currentInterval: nextIndex
           });
+
+          // Prepare the next interval if there is one.
+          if (nextIndex < intervals.length) {
+            var nextInterval = _.clone(intervals[nextIndex]);
+            intervals[nextIndex] = nextInterval;
+            prepare(nextInterval);
+          }
         }
         break;
       case 'finished':
@@ -281,6 +293,11 @@ var WorkoutHelper = React.createClass({
     this.setState({
       intervals: intervals
     });
+
+    function prepare(interval) {
+      interval.stage = 'prepare';
+      interval.countdown = 5;
+    }
   },
   render: function () {
 
