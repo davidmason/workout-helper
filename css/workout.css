@@ -30,7 +30,7 @@ workout {
 }
 
 .workout li, .new-interval input[type=text] {
-  padding: 1em;
+  padding: 0.5em;
   border: 1px solid #dde;
   margin-bottom: -1px;
   color: #717183;
@@ -48,7 +48,6 @@ workout {
 .new-interval {
   width: 100%;
 }
-
 
 .workout button {
   position: relative;
@@ -104,4 +103,45 @@ button.full-width {
 
 .interval.active {
   background-color: #AFE3FF;
+}
+
+.interval {
+  overflow: hidden;
+  text-align: center;
+}
+
+.interval > * {
+  float: left;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.encouragement {
+  float: none;
+  display: inline-block;
+  margin-top: 0.5em;
+}
+
+.encouragement.hide {
+  opacity: 0;
+}
+
+/**
+ * Animation for encouragement messages, to make them more encouraging.
+ */
+.encouragement.animate {
+  animation-duration: 1s;
+  animation-name: blamin;
+}
+
+@keyframes blamin {
+  from {
+    opacity: 0;
+    font-size: 0.25em;
+  }
+
+  to {
+    opacity: 1;
+    font-size: 1em;
+  }
 }

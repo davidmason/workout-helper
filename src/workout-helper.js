@@ -28,6 +28,87 @@ var Clock = React.createClass({
 });
 
 /**
+ * Component that shows encouraging messages at appropriate times.
+ *
+ * e.g. shows "Ready", "Set" and "Go"
+ */
+var Encourager = React.createClass({
+  // TODO use this.state so that a random selection of encouragements
+  // can be selected upon transition from prepare to active, then
+  // displayed.
+
+  getInitialState: function () {
+    return { message: null, changed: false };
+  },
+  componentWillReceiveProps: function (nextProps) {
+    var encourager = this;
+    var previousMessage = this.state.message;
+    var nextMessage = this.calculateMessage(nextProps);
+    var changed = previousMessage !== nextMessage;
+
+    this.setState({ message: nextMessage, changed: changed });
+
+    // Only want to report 'changed' state during the render that will happen
+    // after this, so set it to change back for the next render.
+    if (changed) {
+      setTimeout(function (){
+        encourager.setState({ changed: false });
+      });
+    }
+  },
+  /**
+   * Figure out what message to display, based on given props, and state.
+   *
+   * returns an appropriate message, or null if no message should be shown
+   */
+  calculateMessage: function (props) {
+    var elapsed = props.elapsed;
+    var countdown = props.countdown;
+    var total = elapsed + countdown;
+    switch (props.stage) {
+      case 'prepare':
+        switch (countdown) {
+          case 2:
+            return 'Ready!';
+          case 1:
+            return 'Set!';
+        }
+        break;
+      case 'active':
+        switch (elapsed) {
+          case 0:
+            return 'Go!';
+          default:
+            if (total >= 20) {
+              if (countdown > 7 && elapsed > countdown) {
+                return 'Keep going!';
+              }
+            }
+            if (total >= 10 && countdown <= 5) {
+              return 'Nearly done!';
+            }
+            break;
+        }
+        break;
+    }
+  },
+  render: function () {
+    // When the message has just changed, this will remove the animate class
+    // for a render cycle so that the animation will be reset for the next
+    // render cycle and will play out.
+    var className = 'encouragement ' + (this.state.changed ? 'hide' : 'animate');
+
+    if (this.state.changed) {
+      console.log('Changed!');
+    }
+
+    return this.state.changed ? null : (
+      <div className={className}>{this.state.message}</div>
+    );
+  }
+});
+
+/**
  * A single interval of an exercise.
  *
  * exercise: (string) name of the exercise to perform during the interval
@@ -53,7 +134,10 @@ var Interval = React.createClass({
     }
 
     return <li className={className}>
-      {this.props.exercise} <Clock seconds={time} />
+      {this.props.exercise} <Clock seconds={time} /> <Encourager
+          stage={this.props.stage}
+          countdown={this.props.countdown}
+          elapsed={this.props.time - this.props.countdown} />
     </li>;
   }
 });
@@ -215,7 +299,6 @@ var WorkoutHelper = React.createClass({
 
     // TODO clock with total time display (set in initial state and
     //                                     addInterval)
-    console.log(this.state.intervals.length);
 
     /**
      * Return intervals with all dormant.
@@ -247,10 +330,6 @@ var WorkoutHelper = React.createClass({
 
     // Replace old interval with clone that will be updated
     intervals[currentIndex] = current;
-
-    console.log("current interval: %i", currentIndex);
-    console.log("current stage: %s", current.stage);
-    console.log("countdown: %i", current.countdown);
 
     switch (current.stage) {
       case 'dormant':
