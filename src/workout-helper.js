@@ -115,9 +115,21 @@ var Encourager = React.createClass({
  * time: (integer) number of seconds to perform the exercise
  */
 var Interval = React.createClass({
+  deleteMe: function () {
+    this.props.handleDelete(this.props.id);
+  },
   render: function () {
     var time = this.props.time;
     var className = "interval";
+    var deleteButton = null;
+
+    if (this.props.stage == 'dormant') {
+      deleteButton = (
+        <button onClick={this.deleteMe} >
+          <i className="fa fa-times"></i>
+        </button>
+      );
+    }
 
     if (this.props.stage == 'prepare') {
       className += ' prepare';
@@ -138,6 +150,7 @@ var Interval = React.createClass({
           stage={this.props.stage}
           countdown={this.props.countdown}
           elapsed={this.props.time - this.props.countdown} />
+      {deleteButton}
     </li>;
   }
 });
@@ -234,7 +247,7 @@ var GoButton = React.createClass({
 var WorkoutHelper = React.createClass({
   getInitialState: function () {
     var intervals = this.props.intervals.map(function (interval, index) {
-      return _.assign({}, interval, { key: index, stage: 'dormant' });
+      return _.assign({}, interval, { key: index, id: index, stage: 'dormant' });
     });
     return {
       intervals: intervals,
@@ -256,6 +269,11 @@ var WorkoutHelper = React.createClass({
     this.setState({
       intervals: intervals,
       nextKey: this.state.nextKey + 1
+    });
+  },
+  deleteInterval: function (key) {
+    this.setState({
+      intervals: _.reject(this.state.intervals, { key: key })
     });
   },
   startWorkout: function () {
@@ -380,9 +398,14 @@ var WorkoutHelper = React.createClass({
   },
   render: function () {
 
+    var del = this.deleteInterval;
+
     var intervals = this.state.intervals.map(function (interval) {
       return (
-        <Interval {...interval}></Interval>
+        <Interval
+          handleDelete={del}
+          {...interval}>
+        </Interval>
       );
     });
 

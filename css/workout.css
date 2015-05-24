@@ -29,12 +29,16 @@ workout {
   margin: 0;
 }
 
-.workout li, .new-interval input[type=text] {
+.workout li, .new-interval > input[type=text] {
   padding: 0.5em;
   border: 1px solid #dde;
   margin-bottom: -1px;
   color: #717183;
   font-weight: 600;
+}
+
+.new-interval > input[type=text] {
+  padding: 1em;
 }
 
 .new-interval input[type=text] {
@@ -52,16 +56,23 @@ workout {
 .workout button {
   position: relative;
   vertical-align: top;
-  padding: 1em;
   text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   background-color: #eef;
-  border: 1px solid #dde;
-
   color: #717183;
   font-weight: 600;
-
   cursor: pointer;
+}
+
+.interval > button {
+  border: none;
+  float: right;
+}
+
+.new-interval > button {
+  padding: 1em;
+  border: 1px solid #dde;
+
   -webkit-box-shadow: inset 0 -1px #dde;
   box-shadow: inset 0 -1px #dde;
 }
