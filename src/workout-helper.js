@@ -419,3 +419,105 @@ var WorkoutHelper = React.createClass({
     </div>;
   }
 });
+
+// FIXME do this stuff for realz
+
+
+
+
+
+var allTheData = [
+  {
+    "name": "Cool workout",
+    "intervals": [
+      {
+        "exercise": "Breakdancing",
+        "time": 20
+      },{
+        "exercise": "Keep it real",
+        "time": 10
+      },{
+        "exercise": "High-fives",
+        "time": 8
+      }
+    ]
+  }/*,{
+    "name": "Uncool workout",
+    "intervals": [
+      {
+        "exercise": "Complain loudly",
+        "time": 120
+      },{
+        "exercise": "Blame someone absent",
+        "time": 30
+      },{
+        "exercise": "Stand too close to someone",
+        "time": 600
+      },{
+        "exercise": "Break someone's awesome things",
+        "time": 20
+      }
+    ]
+  }*/
+];
+
+
+
+
+
+var WorkoutList = React.createClass({
+  getInitialState: function () {
+    return { things: [] };
+    //     {
+    //       "name": "Cool workout",
+    //       "intervals": [
+    //         {
+    //           "exercise": "Breakdancing",
+    //           "time": 20
+    //         },{
+    //           "exercise": "Keep it real",
+    //           "time": 10
+    //         },{
+    //           "exercise": "High-fives",
+    //           "time": 8
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // }
+  },
+  componentWillMount: function () {
+    $.ajax({
+      url: 'http://128.199.122.89:3000/workouts',
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        this.setState({ things: data });
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error('no dice :(');
+      }
+    });
+  },
+  render: function () {
+    var allTheThings = this.state.things.map(function (workout) {
+      return (
+        <workout>
+          <WorkoutHelper {...workout} />
+        </workout>
+      );
+    });
+
+    return (
+      <div>
+        {allTheThings}
+      </div>
+    );
+  }
+});
+
+React.render(
+  <WorkoutList />, document.getElementById('thethings')
+);
+
+// TODO get http://128.199.122.89:3000/workouts
