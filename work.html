@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+
+    <!-- This is my favourite font. See http://www.opensans.com -->
+    <link
+      href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="css/workout.css">
+
+    <!-- Lodash is a handy little utility library. See https://lodash.com -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.8.0/lodash.min.js"></script>
+
+    <!-- The core React library -->
+    <script src="https://fb.me/react-0.13.2.js"></script>
+
+    <!-- In-browser JSX transformer, remove when pre-compiling JSX. -->
+    <script src="https://fb.me/JSXTransformer-0.13.2.js"></script>
+
+    <script type="text/jsx" src="src/workout-helper.js"></script>
+
+    <!-- This is for icons. See http://fortawesome.github.io/Font-Awesome/ -->
+    <link rel="stylesheet"
+      href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  </head>
+  <body>
+
+    <h1>Work</h1>
+
+    <p>Just some timers to use while working.</p>
+
+    <workout id="standard-pomodoro">
+      Standard pomodoro
+    </workout>
+
+    <workout id="four-pomodori">
+      Block of 4 pomodori
+    </workout>
+
+    <script type="text/jsx">
+      var blockOfWork = [
+        { exercise: "Recap and plan", time: minutes(2) },
+        { exercise: "Do work", time: minutes(20) },
+        { exercise: "Review and record", time: minutes(3) }
+      ]
+      var shortBreak = [
+        { exercise: "Break", time: minutes(5) }
+      ]
+      var longBreak = [
+        { exercise: "Long break", time: minutes(15) }
+      ]
+
+      var onePomodoro = blockOfWork.concat(shortBreak)
+      React.render(
+        <WorkoutHelper
+          name={'1 Pomodoro (' + sumWorkMinutes(onePomodoro) + ')'}
+          intervals={onePomodoro}>
+        </WorkoutHelper>,
+        document.getElementById('standard-pomodoro')
+      )
+
+      var fourPomodori = [].concat(
+        blockOfWork, shortBreak,
+        blockOfWork, shortBreak,
+        blockOfWork, shortBreak,
+        blockOfWork, longBreak
+      )
+      React.render(
+        <WorkoutHelper
+          name={'Block of 4 pomodori (' + sumWorkMinutes(fourPomodori) + ')'}
+          intervals={fourPomodori}>
+        </WorkoutHelper>,
+        document.getElementById('four-pomodori')
+      )
+
+      function minutes(n) {
+        return n*60
+      }
+
+      /* intervals: array of { ..., time: number } */
+      function sumWorkMinutes (intervals) {
+        return intervals.reduce(add, 0)
+      }
+
+      function add (a, b) {
+        return a + b
+      }
+    </script>
+
+  </body>
+</html>
