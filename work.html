@@ -54,7 +54,7 @@
       var onePomodoro = blockOfWork.concat(shortBreak)
       React.render(
         <WorkoutHelper
-          name={'1 Pomodoro (' + sumWorkMinutes(onePomodoro) + ')'}
+          name={'1 Pomodoro (' + sumWorkMinutes(onePomodoro) + 'min)'}
           intervals={onePomodoro}>
         </WorkoutHelper>,
         document.getElementById('standard-pomodoro')
@@ -68,7 +68,7 @@
       )
       React.render(
         <WorkoutHelper
-          name={'Block of 4 pomodori (' + sumWorkMinutes(fourPomodori) + ')'}
+          name={'Block of 4 pomodori (' + sumWorkMinutes(fourPomodori) + 'min)'}
           intervals={fourPomodori}>
         </WorkoutHelper>,
         document.getElementById('four-pomodori')
@@ -80,7 +80,7 @@
 
       /* intervals: array of { ..., time: number } */
       function sumWorkMinutes (intervals) {
-        return intervals.reduce(addTimes, 0)
+        return Math.round(intervals.reduce(addTimes, 0) / 60)
       }
 
       function addTimes (a, b) {
