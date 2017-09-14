@@ -1,5 +1,23 @@
 
 /**
+ * The beep sound for the end of timers, put one on the page to use it.
+ */
+var playBeep = (function () {
+  // try to find the beep
+  var beep = document.getElementById('the-beeps')
+  if (beep) {
+    return function () {
+      beep.play()
+    }
+  } else {
+    console.log('did not find a beep (audio with id "the-beeps")')
+    return function () {
+      console.log('no beep loaded')
+    }
+  }
+})()
+
+/**
  * Clock that displays a given number of seconds.
  *
  * Shows seconds if it is less than a minute, otherwise splits the display
@@ -346,6 +364,7 @@ var WorkoutHelper = React.createClass({
       case 'active':
         current.countdown--;
         if (current.countdown <= 0) {
+	  playBeep();
           current.stage = 'finished';
 
           var nextIndex = currentIndex + 1;
